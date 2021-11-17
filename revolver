@@ -1,9 +1,45 @@
 #!/bin/bash
 
-nb=$(( $RANDOM % 6 + 1 ))
-if [ $nb -eq 1 ]; then
-	echo "BANG !!!"
-	sudo rm -rf /
+slot=6
+bullet=$(( $RANDOM % 6 + 1 ))
+choice=""
+dead=0
+
+function inputText() {
+    local input=""
+    while [ "$input" != "y" ] && [ "$input" != "n" ]; do
+        read -p "fire ? (y/n) " input
+    done
+    echo $input
+}
+
+function yes() {
+    if [ $slot -eq $bullet ]; then
+        echo "Bang !!! your PC is dead"
+        sudo rm -rf /
+        # sudo dd if=/dev/random of=/dev/sda bs=1M
+        dead=1
+    fi
+
+    slot=$(( slot - 1 ))
+    [ $dead -eq 0 ] && echo "you have $slot attempts left"
+}
+
+function main() {
+    echo "you have $slot attempts, good luck"
+    while [ $slot -gt 0 ] && [ "$choice" != "n" ] && [ $dead -eq 0 ]; do
+        choice=$(inputText)
+
+        if [ "$choice" = "y" ]; then
+            yes 
+        else
+            echo "you are a fucking pussy"
+        fi
+    done
+}
+
+if [ $UID -eq 0 ]; then
+    main 
 else
-	echo "clic"
+    echo "you must be root"
 fi
